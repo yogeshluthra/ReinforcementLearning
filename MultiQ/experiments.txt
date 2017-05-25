@@ -1,0 +1,86 @@
+Correlated Q
+-----------------------
+Correlated Q with 1 LP call per iteration. Time ~ 1hr
+
+Correlated Q with 2 LP calls per iteration. Time ~ 1.64hr
+    no difference in convergence behavior
+
+Corrected a bug in environment. Now trying to get to invalid row/col means remain 'stand'
+
+Reduced value of alpha from 0.01 to 0.001 (now convergence is much better than before)
+
+Policy seems to converge to A: S,E      B: S,stand
+(following disribution using adversarial equilibrium). Joint distribution using Correlated Q was uniform (something seems wrong)
+[  5.03353646e-01   4.96637177e-01   5.26585527e-06  -7.15752877e-09
+   3.91884152e-06] -5.83142030781
+[  4.95904408e-01  -9.64671503e-10   5.04095366e-01  -2.81941266e-09
+   2.29941726e-07] 5.83142031382
+{0: 'S', 1: 'E', 2: 'stand', 3: 'W', 4: 'N'}
+
+#TODO: Mainly checking to see if policies converge for both to S,stand using following.
+#TODO: Make sure if following caused any weird problems.
+#DONE: There was a real bug. Players are not supposed to cross each other. After doing following get expected distribution
+Added a condition in environment, where players can't exchange positions at the same time.
+        if np.all(newposA==self.posB) and np.all(newposB==self.posA):    # a collision scenario where both players try to exchange positions at same time
+            actA = 'stand'; actB='stand'                                    # stand where you are
+            newposA=self.posA
+            newposB=self.posB
+For state s, Joint Action probabilities (policy) from Correlated Equilibria
+[[ 0.251  0.000  0.232 -0.000  0.000]
+ [ 0.000 -0.000  0.000 -0.000  0.000]
+ [ 0.268  0.000  0.249 -0.000  0.000]
+ [-0.000 -0.000 -0.000 -0.000 -0.000]
+ [ 0.000 -0.000  0.000 -0.000  0.000]]
+
+For state s, Independent Action Probabilities (policy) using Adversarial Equilibria (although Q values for state s were calculated using Correlated Q)
+[[ 0.483  0.000  0.517 -0.000  0.000]
+ [ 0.519 -0.000  0.481 -0.000  0.000]]
+
+ {0: 'S', 1: 'E', 2: 'stand', 3: 'W', 4: 'N'}
+----------------------------------------------
+----------------------------------------------
+
+ FoeQ
+----------------------------------------------
+Took 4400sec to run
+
+For state s, Independent Action Probabilities (policy) using Adversarial Equilibria {A: S,stand       B: S,N}
+(in state s, N==stand as B tries to move to prohibited zone and environment makes it stick)
+[[ 0.498  0.000  0.502 -0.000  0.000]
+ [ 0.501 -0.000  0.000 -0.000  0.499]]
+
+For state s, policy using Correlated Equilibria (although Q values for state s were calculated using FoeQ)
+[[ 0.249  0.000  0.000 -0.000  0.249]
+ [ 0.000  0.000  0.000 -0.000  0.000]
+ [ 0.251 -0.000  0.000 -0.000  0.251]
+ [-0.000 -0.000 -0.000 -0.000 -0.000]
+ [ 0.000  0.000  0.000 -0.000  0.000]]
+
+ {0: 'S', 1: 'E', 2: 'stand', 3: 'W', 4: 'N'}
+
+#TODO: Both Correlated-Q and FoeQ algorithms converge to same policies.
+----------------------------------------------
+
+Friend Q (graph changes with every random run. This is because monitored state is hit only a few times)
+----------------------------------------------
+Converges super fast (check on slack). Takes between 40k-60k iterations. Converges to same policy for player B, as mentioned in paper (going E)
+Coordinated Equilibrium
+value of players (these are fallacious values as explained the paper. Based on positive anticipation of players)
+[ 10.   9.]
+
+Action probabilities
+[[ 1.  0.  0.  0.  0.]
+ [ 0.  1.  0.  0.  0.]]
+{0: 'S', 1: 'E', 2: 'stand', 3: 'W', 4: 'N'}
+----------------------------------------------
+
+Q learning
+----------------------------------------------
+Doesn't converge (changed final alpha from 0.001 to 0.01 to see Qdiff profile
+significantly moves with alpha showing it just follows alpha decay profile
+For plotting, choose either Friend_Q.png or Friend_Q_lastPerfect.png
+
+
+Observations:
+- Graphs look carbon copy in Greenwald's paper. Mine are similar trend wise, but not carbon copies. I explore with epsilon 0.2
+    Seems Greenwald used either a random seed or didn't explore (not stated in paper)
