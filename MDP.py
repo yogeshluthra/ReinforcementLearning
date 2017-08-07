@@ -106,9 +106,11 @@ def VI():
                     Vnew[s]=bestVal
                     Pi[s]=a
         V=Vnew
+        print "Best Policy at ",i
+        print Pi
+        print
         print 'iter ',i+1
         print np.round(V,2)
-        print Pi
         print
 
 def ModifiedPI():
