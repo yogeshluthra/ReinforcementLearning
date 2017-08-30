@@ -75,11 +75,11 @@ for ExplorationRate, LearningRate in experimentList:
                                'End': 600,
                                't1': 300.0, 'tEnd': 0.1,
                                'eps1': ExplorationRate, 'epsEnd': 0.00}
-    learning_rate = LearningRate  # earlier 1e-4. hope to see better learning, espeically towards the end. 1e-4 one seems working and since doesn't diverge, a better choice.. earlier 1e-6. had some good results
-    beta = 0.0000  # seems agent gets biased to never get down with any beta.. earlier 0.0001. network seems to overfit in the face of increased learning cap (hidden units increased from 200 to 500).. earlier 0.001. seems bias too high that network chooses to never go down as it might result in fall. regularization param. earlier 0.001 worked ok.
+    learning_rate = LearningRate
+    beta = 0.0000
 
-    nObsForState = 1  # earlier 1.. earlier 8. worked pretty good.. 16 was bad.. 2 was bad.. number of env states that from single input vector, phi, for estimator
-    ReplayMemMaxSize = 1000000  # replay memory max size. earlier was very small. caused many experiences go waste.
+    nObsForState = 1
+    ReplayMemMaxSize = 1000000  # replay memory max size.
     batch_size = min(200, int(ReplayMemMaxSize / 100))
     target_network_update_every = 500  # iterations. chance of selecting a sample 1-((ReplayMemMaxSize-batch_size)/ReplayMemMaxSize)^iterations
     nEpisodes = 1000
